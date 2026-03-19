@@ -49,6 +49,15 @@ export interface Database {
           notes?: string | null;
           updated_at?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "posts_id_fkey";
+            columns: ["id"];
+            isOneToOne: false;
+            referencedRelation: "post_analytics";
+            referencedColumns: ["post_id"];
+          },
+        ];
       };
       analytics_snapshots: {
         Row: {
@@ -88,6 +97,7 @@ export interface Database {
           followers?: number;
           engagement_rate?: number;
         };
+        Relationships: [];
       };
       post_analytics: {
         Row: {
@@ -121,7 +131,22 @@ export interface Database {
           saves?: number;
           reach?: number;
         };
+        Relationships: [
+          {
+            foreignKeyName: "post_analytics_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: true;
+            referencedRelation: "posts";
+            referencedColumns: ["id"];
+          },
+        ];
       };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
     };
   };
 }

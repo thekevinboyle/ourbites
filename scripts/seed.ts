@@ -1,5 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "../src/lib/database.types";
+import type { Database, Platform, PostType, PostStatus } from "../src/lib/database.types";
+
+type PostInsert = Database["public"]["Tables"]["posts"]["Insert"];
+type AnalyticsSnapshotInsert = Database["public"]["Tables"]["analytics_snapshots"]["Insert"];
+type PostAnalyticsInsert = Database["public"]["Tables"]["post_analytics"]["Insert"];
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -13,15 +17,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
-type Platform = "instagram" | "tiktok";
-type PostType =
-  | "reel"
-  | "carousel"
-  | "story"
-  | "single_image"
-  | "video"
-  | "photo";
-type PostStatus = "idea" | "draft" | "scheduled" | "published";
 
 // --- Helpers ---
 
@@ -127,17 +122,7 @@ function generatePosts(
   count: number
 ) {
   const statuses: PostStatus[] = ["idea", "draft", "scheduled", "published"];
-  const posts: Array<{
-    platform: Platform;
-    caption: string;
-    post_type: PostType;
-    status: PostStatus;
-    scheduled_at: string | null;
-    published_at: string | null;
-    notes: string | null;
-    created_at: string;
-    updated_at: string;
-  }> = [];
+  const posts: PostInsert[] = [];
 
   for (let i = 0; i < count; i++) {
     const status = randomElement(statuses);
@@ -179,17 +164,7 @@ function generatePosts(
 }
 
 function generateAnalyticsSnapshots(platform: Platform, days: number) {
-  const snapshots: Array<{
-    platform: Platform;
-    date: string;
-    impressions: number;
-    likes: number;
-    comments: number;
-    shares: number;
-    saves: number;
-    followers: number;
-    engagement_rate: number;
-  }> = [];
+  const snapshots: AnalyticsSnapshotInsert[] = [];
 
   // Start with a base follower count
   let followers = platform === "instagram" ? 12500 : 8200;
@@ -228,7 +203,7 @@ function generateAnalyticsSnapshots(platform: Platform, days: number) {
   return snapshots;
 }
 
-function generatePostAnalytics(postId: string) {
+function generatePostAnalytics(postId: string): PostAnalyticsInsert {
   const impressions = randomInt(500, 50000);
   const likes = Math.floor(impressions * (0.03 + Math.random() * 0.07));
   const comments = Math.floor(likes * (0.05 + Math.random() * 0.15));
