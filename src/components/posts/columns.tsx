@@ -41,7 +41,8 @@ const statusLabels: Record<PostStatus, string> = {
 export function createColumns(
   onEdit: (post: Post) => void,
   onDelete: (post: Post) => void,
-  onDuplicate: (post: Post) => void
+  onDuplicate: (post: Post) => void,
+  onStatusChange: (post: Post, newStatus: PostStatus) => void
 ): ColumnDef<Post>[] {
   return [
     {
@@ -95,7 +96,7 @@ export function createColumns(
     },
     {
       id: "metricool",
-      header: "Metricool",
+      header: "Buffer",
       cell: ({ row }) => {
         const post = row.original;
         if (!post.metricoolPostId) return null;
@@ -144,6 +145,27 @@ export function createColumns(
               <span className="sr-only">Open menu</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {post.status === "idea" && (
+                <DropdownMenuItem onClick={() => onStatusChange(post, "draft")}>
+                  Move to Drafts
+                </DropdownMenuItem>
+              )}
+              {post.status === "draft" && (
+                <>
+                  <DropdownMenuItem onClick={() => onEdit(post)}>
+                    Schedule
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onStatusChange(post, "idea")}>
+                    Move to Backlog
+                  </DropdownMenuItem>
+                </>
+              )}
+              {post.status === "scheduled" && (
+                <DropdownMenuItem onClick={() => onStatusChange(post, "draft")}>
+                  Move to Drafts
+                </DropdownMenuItem>
+              )}
+              {post.status !== "published" && <DropdownMenuSeparator />}
               <DropdownMenuItem onClick={() => onEdit(post)}>
                 Edit
               </DropdownMenuItem>

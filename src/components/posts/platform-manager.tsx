@@ -136,6 +136,29 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
     [createPost, updatePost, scheduleToMetricool]
   );
 
+  const handleStatusChange = useCallback(
+    (post: Post, newStatus: PostStatus) => {
+      updatePost.mutate(
+        { id: post.id, status: newStatus },
+        {
+          onSuccess: () => {
+            const labels: Record<PostStatus, string> = {
+              idea: "Backlog",
+              draft: "Drafts",
+              scheduled: "Scheduled",
+              published: "Published",
+            };
+            toast.success(`Post moved to ${labels[newStatus]}.`);
+          },
+          onError: () => {
+            toast.error("Failed to update post status.");
+          },
+        }
+      );
+    },
+    [updatePost]
+  );
+
   const handleNewPost = () => {
     setEditingPost(null);
     setSheetOpen(true);
@@ -164,6 +187,7 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onDuplicate={handleDuplicate}
+                onStatusChange={handleStatusChange}
               />
             )}
           </TabsContent>
@@ -177,6 +201,7 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onDuplicate={handleDuplicate}
+                onStatusChange={handleStatusChange}
               />
             )}
           </TabsContent>
@@ -190,6 +215,7 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onDuplicate={handleDuplicate}
+                onStatusChange={handleStatusChange}
               />
             )}
           </TabsContent>
@@ -203,6 +229,7 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onDuplicate={handleDuplicate}
+                onStatusChange={handleStatusChange}
               />
             )}
           </TabsContent>

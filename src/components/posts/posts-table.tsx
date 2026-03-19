@@ -10,7 +10,7 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 
-import type { Post } from "@/lib/data/types";
+import type { Post, PostStatus } from "@/lib/data/types";
 import { createColumns } from "./columns";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,6 +27,7 @@ interface PostsTableProps {
   onEdit: (post: Post) => void;
   onDelete: (post: Post) => void;
   onDuplicate: (post: Post) => void;
+  onStatusChange: (post: Post, newStatus: PostStatus) => void;
 }
 
 export function PostsTable({
@@ -34,13 +35,14 @@ export function PostsTable({
   onEdit,
   onDelete,
   onDuplicate,
+  onStatusChange,
 }: PostsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
   const columns = useMemo(
-    () => createColumns(onEdit, onDelete, onDuplicate),
-    [onEdit, onDelete, onDuplicate]
+    () => createColumns(onEdit, onDelete, onDuplicate, onStatusChange),
+    [onEdit, onDelete, onDuplicate, onStatusChange]
   );
 
   const table = useReactTable({
