@@ -26,6 +26,8 @@ function mapPost(row: Record<string, unknown>): Post {
     notes: (row.notes as string | null) ?? null,
     createdAt: new Date(row.created_at as string),
     updatedAt: new Date(row.updated_at as string),
+    metricoolPostId: (row.metricool_post_id as string | null) ?? null,
+    metricoolStatus: (row.metricool_status as string | null) ?? null,
   };
 }
 
@@ -389,6 +391,17 @@ export class SupabaseMockProvider implements DataProvider {
       .single();
 
     if (error) throw error;
+    return mapPost(data as Record<string, unknown>);
+  }
+
+  async scheduleToMetricool(id: string): Promise<Post> {
+    const { data, error } = await supabase
+      .from("posts")
+      .update({ metricool_status: "pending" })
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
     return mapPost(data as Record<string, unknown>);
   }
 }

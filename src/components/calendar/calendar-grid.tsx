@@ -112,6 +112,8 @@ export function CalendarGrid() {
       notes: null,
       createdAt: calendarPost.date,
       updatedAt: calendarPost.date,
+      metricoolPostId: null,
+      metricoolStatus: null,
     };
     setEditingPost(postAsPost);
     setSheetOpen(true);

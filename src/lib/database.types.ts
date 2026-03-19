@@ -25,6 +25,8 @@ export interface Database {
           notes: string | null;
           created_at: string;
           updated_at: string;
+          metricool_post_id: string | null;
+          metricool_status: string | null;
         };
         Insert: {
           id?: string;
@@ -37,6 +39,8 @@ export interface Database {
           notes?: string | null;
           created_at?: string;
           updated_at?: string;
+          metricool_post_id?: string | null;
+          metricool_status?: string | null;
         };
         Update: {
           id?: string;
@@ -48,6 +52,8 @@ export interface Database {
           published_at?: string | null;
           notes?: string | null;
           updated_at?: string;
+          metricool_post_id?: string | null;
+          metricool_status?: string | null;
         };
         Relationships: [
           {

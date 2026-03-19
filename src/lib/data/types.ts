@@ -13,6 +13,8 @@ export interface Post {
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
+  metricoolPostId: string | null;
+  metricoolStatus: string | null;
 }
 
 export interface PostWithAnalytics extends Post {
@@ -114,4 +116,5 @@ export interface DataProvider {
   getEngagementByType(dateRange: DateRange, platform?: Platform): Promise<EngagementByType[]>;
   getCalendarPosts(month: number, year: number): Promise<CalendarPost[]>;
   reschedulePost(id: string, newDate: Date): Promise<Post>;
+  scheduleToMetricool(id: string): Promise<Post>;
 }
