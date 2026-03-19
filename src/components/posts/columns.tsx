@@ -94,6 +94,42 @@ export function createColumns(
       },
     },
     {
+      id: "metricool",
+      header: "Metricool",
+      cell: ({ row }) => {
+        const post = row.original;
+        if (!post.metricoolPostId) return null;
+        if (post.metricoolStatus === "failed") {
+          return (
+            <Badge
+              variant="secondary"
+              className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+            >
+              Failed
+            </Badge>
+          );
+        }
+        if (post.metricoolStatus === "published") {
+          return (
+            <Badge
+              variant="secondary"
+              className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+            >
+              Published
+            </Badge>
+          );
+        }
+        return (
+          <Badge
+            variant="secondary"
+            className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+          >
+            Synced
+          </Badge>
+        );
+      },
+    },
+    {
       id: "actions",
       cell: ({ row }) => {
         const post = row.original;
