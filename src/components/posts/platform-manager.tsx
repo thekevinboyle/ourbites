@@ -10,7 +10,7 @@ import type {
   CreatePostInput,
   UpdatePostInput,
 } from "@/lib/data/types";
-import { usePosts, useCreatePost, useUpdatePost, useDeletePost } from "@/hooks/use-posts";
+import { usePosts, useCreatePost, useUpdatePost, useDeletePost, useScheduleToMetricool } from "@/hooks/use-posts";
 import { PostsTable } from "./posts-table";
 import { PostFormSheet } from "./post-form-sheet";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,7 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
   const createPost = useCreatePost();
   const updatePost = useUpdatePost();
   const deletePost = useDeletePost();
+  const scheduleToMetricool = useScheduleToMetricool();
 
   const handleEdit = useCallback((post: Post) => {
     setEditingPost(post);
@@ -89,6 +90,18 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
               toast.success("Post updated successfully.");
               setSheetOpen(false);
               setEditingPost(null);
+              if (updateData.status === "scheduled") {
+                scheduleToMetricool.mutate(id, {
+                  onSuccess: (result) => {
+                    if (result.metricoolPostId) {
+                      toast.success("Post pushed to Metricool for publishing.");
+                    }
+                  },
+                  onError: (err) => {
+                    toast.error((err as Error).message);
+                  },
+                });
+              }
             },
             onError: () => {
               toast.error("Failed to update post.");
@@ -97,10 +110,22 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
         );
       } else {
         createPost.mutate(data, {
-          onSuccess: () => {
+          onSuccess: (createdPost) => {
             toast.success("Post created successfully.");
             setSheetOpen(false);
             setEditingPost(null);
+            if (data.status === "scheduled") {
+              scheduleToMetricool.mutate(createdPost.id, {
+                onSuccess: (result) => {
+                  if (result.metricoolPostId) {
+                    toast.success("Post pushed to Metricool for publishing.");
+                  }
+                },
+                onError: (err) => {
+                  toast.error((err as Error).message);
+                },
+              });
+            }
           },
           onError: () => {
             toast.error("Failed to create post.");
@@ -108,7 +133,7 @@ export function PlatformManager({ platform }: PlatformManagerProps) {
         });
       }
     },
-    [createPost, updatePost]
+    [createPost, updatePost, scheduleToMetricool]
   );
 
   const handleNewPost = () => {
