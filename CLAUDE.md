@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Social media content management dashboard for Instagram and TikTok. Single-user, no authentication. Mock data with Metricool integration path.
+Social media content management dashboard for Instagram and TikTok. Single-user, no authentication. Mock data with Buffer integration path.
 
 ## Tech Stack
 
@@ -38,18 +38,20 @@ Social media content management dashboard for Instagram and TikTok. Single-user,
 - `pnpm db:seed` - Seed mock data into Supabase
 - `pnpm lint` - Run ESLint
 
-## Metricool Integration
+## Buffer Integration
 
-- Posts with status "scheduled" are pushed to Metricool via `/api/schedule`
+- Posts with status "scheduled" are pushed to Buffer via `/api/schedule`
 - Manual sync via "Sync Now" button calls `/api/sync`
-- Metricool credentials: `METRICOOL_USER_TOKEN`, `METRICOOL_USER_ID`, `METRICOOL_BLOG_ID`
-- Graceful degradation: if Metricool is not configured, scheduling saves to Supabase only
-- Metricool client: `src/lib/metricool/client.ts`
-- Sync logic: `src/lib/metricool/sync.ts`
+- Buffer credentials: `BUFFER_API_TOKEN`, `BUFFER_ORGANIZATION_ID`
+- Graceful degradation: if Buffer is not configured, scheduling saves to Supabase only
+- Buffer client: `src/lib/buffer/client.ts`
+- Sync logic: `src/lib/buffer/sync.ts`
+- Buffer has no analytics API - analytics use mock data from Supabase
+- DB columns `metricool_post_id` and `metricool_status` are reused for Buffer post IDs
 
 ## Key Architecture Decisions
 
-- DataProvider abstraction enables swapping mock data for Metricool API via `NEXT_PUBLIC_USE_METRICOOL` env var
+- DataProvider abstraction enables swapping mock data for Buffer API via `NEXT_PUBLIC_USE_BUFFER` env var
 - Single `posts` table serves both platforms, distinguished by `platform` column
-- Database schema mirrors Metricool API response shapes for future integration
+- Database schema mirrors API response shapes for integration
 - Calendar filters persist in URL search params

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { isMetricoolConfigured } from "@/lib/metricool/client";
-import { syncAll } from "@/lib/metricool/sync";
+import { isBufferConfigured } from "@/lib/buffer/client";
+import { syncAll } from "@/lib/buffer/sync";
 
 export async function POST() {
   try {
-    if (!isMetricoolConfigured()) {
+    if (!isBufferConfigured()) {
       return NextResponse.json(
-        { error: "Metricool is not configured. Set METRICOOL_USER_TOKEN, METRICOOL_USER_ID, and METRICOOL_BLOG_ID environment variables." },
+        { error: "Buffer is not configured. Set BUFFER_API_TOKEN and BUFFER_ORGANIZATION_ID environment variables." },
         { status: 400 }
       );
     }

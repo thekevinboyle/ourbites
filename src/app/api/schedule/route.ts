@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { createMetricoolClient } from "@/lib/metricool/client";
+import { createBufferClient, isBufferConfigured } from "@/lib/buffer/client";
 
 export async function POST(request: Request) {
   try {
@@ -31,62 +31,73 @@ export async function POST(request: Request) {
     // Validate the post is scheduled and has a date
     if (post.status !== "scheduled" || !post.scheduled_at) {
       return NextResponse.json(
-        { error: "Post must be scheduled with a date before sending to Metricool" },
+        { error: "Post must be scheduled with a date before sending to Buffer" },
         { status: 400 }
       );
     }
 
-    // If already has a metricool_post_id, return early
+    // If already has a metricool_post_id (reused for Buffer), return early
     if (post.metricool_post_id) {
       return NextResponse.json({
-        message: "Post already scheduled to Metricool",
-        metricoolPostId: post.metricool_post_id,
+        message: "Post already scheduled to Buffer",
+        bufferPostId: post.metricool_post_id,
       });
     }
 
-    // Create Metricool client
-    const client = createMetricoolClient();
+    // Create Buffer client
+    const client = createBufferClient();
     if (!client) {
-      // Save locally only - Metricool not configured
+      // Save locally only - Buffer not configured
       return NextResponse.json({
-        message: "Metricool is not configured. Post saved locally only.",
+        message: "Buffer is not configured. Post saved locally only.",
         postId: post.id,
       });
     }
 
-    // Map platform to Metricool network name
-    const network = post.platform === "tiktok" ? "tiktok" : "instagram";
+    // Get channels from Buffer to find the right one for this platform
+    const channels = await client.getChannels();
+    const channel = channels.find(
+      (ch) => ch.service === (post.platform === "tiktok" ? "tiktok" : "instagram")
+    );
+
+    if (!channel) {
+      return NextResponse.json(
+        { error: `No Buffer channel found for platform: ${post.platform}` },
+        { status: 400 }
+      );
+    }
 
     try {
-      const metricoolResponse = await client.schedulePost({
-        network,
+      const bufferPost = await client.schedulePost({
+        channelId: channel.id,
         text: post.caption ?? "",
-        date: post.scheduled_at,
-        type: post.post_type,
+        schedulingType: "automatic",
+        mode: "customScheduled",
+        dueAt: post.scheduled_at,
       });
 
-      // Store the returned Metricool ID in Supabase
+      // Store the returned Buffer post ID in the metricool_post_id column
       const { error: updateError } = await supabase
         .from("posts")
         .update({
-          metricool_post_id: metricoolResponse.id,
+          metricool_post_id: bufferPost.id,
           metricool_status: "pending",
         })
         .eq("id", postId);
 
       if (updateError) {
         return NextResponse.json(
-          { error: `Failed to save Metricool ID: ${updateError.message}` },
+          { error: `Failed to save Buffer post ID: ${updateError.message}` },
           { status: 500 }
         );
       }
 
       return NextResponse.json({
-        message: "Post scheduled to Metricool",
-        metricoolPostId: metricoolResponse.id,
+        message: "Post scheduled to Buffer",
+        bufferPostId: bufferPost.id,
       });
-    } catch (metricoolError) {
-      // On Metricool error, update status to failed
+    } catch (bufferError) {
+      // On Buffer error, update status to failed
       await supabase
         .from("posts")
         .update({ metricool_status: "failed" })
@@ -94,7 +105,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         {
-          error: `Metricool scheduling failed: ${metricoolError instanceof Error ? metricoolError.message : "Unknown error"}`,
+          error: `Buffer scheduling failed: ${bufferError instanceof Error ? bufferError.message : "Unknown error"}`,
         },
         { status: 500 }
       );
