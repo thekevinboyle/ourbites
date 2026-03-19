@@ -1,3 +1,5 @@
+import { config } from "dotenv";
+config({ path: ".env.local" });
 import { createClient } from "@supabase/supabase-js";
 import type { Database, Platform, PostType, PostStatus } from "../src/lib/database.types";
 
