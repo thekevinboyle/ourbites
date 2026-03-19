@@ -38,6 +38,15 @@ Social media content management dashboard for Instagram and TikTok. Single-user,
 - `pnpm db:seed` - Seed mock data into Supabase
 - `pnpm lint` - Run ESLint
 
+## Metricool Integration
+
+- Posts with status "scheduled" are pushed to Metricool via `/api/schedule`
+- Manual sync via "Sync Now" button calls `/api/sync`
+- Metricool credentials: `METRICOOL_USER_TOKEN`, `METRICOOL_USER_ID`, `METRICOOL_BLOG_ID`
+- Graceful degradation: if Metricool is not configured, scheduling saves to Supabase only
+- Metricool client: `src/lib/metricool/client.ts`
+- Sync logic: `src/lib/metricool/sync.ts`
+
 ## Key Architecture Decisions
 
 - DataProvider abstraction enables swapping mock data for Metricool API via `NEXT_PUBLIC_USE_METRICOOL` env var
