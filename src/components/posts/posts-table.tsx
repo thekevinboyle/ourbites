@@ -17,6 +17,7 @@ import type { Post, PostStatus } from "@/lib/data/types";
 import { createColumns } from "./columns";
 import { Input } from "@/components/ui/input";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -25,6 +26,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+const responsiveClasses: Record<string, string> = {
+  postType: "hidden sm:table-cell",
+  scheduledAt: "hidden md:table-cell",
+  metricool: "hidden lg:table-cell",
+};
 
 const platformLabels: Record<string, string> = {
   instagram: "Instagram",
@@ -92,13 +99,16 @@ export function PostsTable({
         onChange={(e) => setGlobalFilter(e.target.value)}
         className="max-w-sm"
       />
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(responsiveClasses[header.id])}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -120,7 +130,10 @@ export function PostsTable({
                     data-state={row.getIsExpanded() ? "expanded" : undefined}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        key={cell.id}
+                        className={cn(responsiveClasses[cell.column.id])}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -176,7 +189,7 @@ function ExpandedRowDetail({ post }: { post: Post }) {
         </p>
       )}
 
-      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
         <span>Platform: {platformLabel}</span>
         <span>&middot;</span>
         <span>Type: {typeLabel}</span>

@@ -21,7 +21,8 @@ import { PostFormSheet } from "@/components/posts/post-form-sheet";
 import { DayCell } from "./day-cell";
 import type { CalendarPost, Post, CreatePostInput, UpdatePostInput } from "@/lib/data/types";
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS_SHORT = ["S", "M", "T", "W", "T", "F", "S"];
+const WEEKDAYS_FULL = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function CalendarGrid() {
   const {
@@ -161,12 +162,13 @@ export function CalendarGrid() {
         <div className="overflow-hidden rounded-lg border border-b-0 border-r-0">
           {/* Weekday headers */}
           <div className="grid grid-cols-7">
-            {WEEKDAYS.map((day) => (
+            {WEEKDAYS_FULL.map((day, i) => (
               <div
                 key={day}
                 className="border-b border-r bg-muted/50 px-2 py-1.5 text-center text-xs font-medium text-muted-foreground"
               >
-                {day}
+                <span className="hidden sm:inline">{day}</span>
+                <span className="sm:hidden">{WEEKDAYS_SHORT[i]}</span>
               </div>
             ))}
           </div>
@@ -177,7 +179,7 @@ export function CalendarGrid() {
             {Array.from({ length: firstDayOfWeek }).map((_, i) => (
               <div
                 key={`empty-${i}`}
-                className="min-h-[100px] border-b border-r bg-muted/30"
+                className="min-h-[60px] sm:min-h-[100px] border-b border-r bg-muted/30"
               />
             ))}
 

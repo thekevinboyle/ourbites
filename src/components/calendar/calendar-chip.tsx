@@ -55,7 +55,7 @@ export function CalendarChip({ post, onClick }: CalendarChipProps) {
       {...attributes}
       {...listeners}
       className={cn(
-        "flex items-center gap-1.5 rounded px-2 py-1 text-xs cursor-grab",
+        "flex items-center gap-1 sm:gap-1.5 rounded px-1 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs cursor-grab",
         platformStyles[post.platform],
         isDragging && "opacity-50"
       )}

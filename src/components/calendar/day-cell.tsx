@@ -34,7 +34,7 @@ export function DayCell({
     <div
       ref={setNodeRef}
       className={cn(
-        "min-h-[100px] border-b border-r p-1",
+        "min-h-[60px] sm:min-h-[100px] border-b border-r p-0.5 sm:p-1",
         !isCurrentMonth && "bg-muted/30 text-muted-foreground",
         isToday && "bg-primary/5",
         isOver && "bg-accent/50"

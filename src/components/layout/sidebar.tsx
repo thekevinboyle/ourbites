@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { SyncButton } from "./sync-button";
 
-const navItems = [
+export const navItems = [
   { href: "/", label: "Overview", icon: "📊" },
   { href: "/instagram", label: "Instagram", icon: "📸" },
   { href: "/tiktok", label: "TikTok", icon: "🎵" },

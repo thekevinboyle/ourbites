@@ -24,7 +24,7 @@ export function AnalyticsControls() {
     useAnalyticsStore();
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       <div className="flex items-center gap-1">
         {platformOptions.map((opt) => (
           <Button
@@ -72,7 +72,7 @@ export function AnalyticsControls() {
               setDateRange(date, dateRange.end);
             }
           }}
-          className={cn("w-[140px]")}
+          className={cn("w-[120px] sm:w-[140px]")}
         />
         <span className="text-sm text-muted-foreground">to</span>
         <Input
@@ -84,7 +84,7 @@ export function AnalyticsControls() {
               setDateRange(dateRange.start, date);
             }
           }}
-          className={cn("w-[140px]")}
+          className={cn("w-[120px] sm:w-[140px]")}
         />
       </div>
     </div>
