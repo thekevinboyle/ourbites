@@ -43,7 +43,7 @@ export function SyncButton() {
     <div className="border-t border-sidebar-border p-4">
       <Button
         variant="outline"
-        className="w-full border-2 border-sidebar-foreground/30 text-sidebar-foreground uppercase tracking-widest text-xs font-bold hover:border-primary hover:text-primary hover:bg-transparent"
+        className="w-full border-2 border-sidebar-foreground/30 bg-transparent text-sidebar-foreground uppercase tracking-widest text-xs font-bold hover:border-primary hover:text-primary hover:bg-transparent"
         onClick={handleSync}
         disabled={isSyncing}
       >
