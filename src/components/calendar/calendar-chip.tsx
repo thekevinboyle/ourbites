@@ -11,8 +11,8 @@ interface CalendarChipProps {
 }
 
 const platformStyles: Record<string, string> = {
-  instagram: "bg-gradient-to-r from-pink-400 to-purple-500 text-white",
-  tiktok: "bg-gradient-to-r from-gray-800 to-teal-500 text-white",
+  instagram: "bg-primary text-primary-foreground",
+  tiktok: "bg-foreground text-background",
 };
 
 function statusDot(status: string) {
@@ -55,7 +55,7 @@ export function CalendarChip({ post, onClick }: CalendarChipProps) {
       {...attributes}
       {...listeners}
       className={cn(
-        "flex items-center gap-1 sm:gap-1.5 rounded px-1 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs cursor-grab",
+        "flex items-center gap-1 sm:gap-1.5 px-1 sm:px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs cursor-grab font-bold uppercase tracking-wide",
         platformStyles[post.platform],
         isDragging && "opacity-50"
       )}

@@ -1,7 +1,9 @@
 export function Header({ title }: { title: string }) {
   return (
-    <header className="flex h-14 items-center border-b px-6">
-      <h2 className="text-lg font-semibold">{title}</h2>
+    <header className="border-b-4 border-primary py-8 px-6">
+      <h2 className="text-4xl md:text-5xl font-display font-black uppercase tracking-tight">
+        {title}
+      </h2>
     </header>
   );
 }

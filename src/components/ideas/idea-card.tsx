@@ -20,7 +20,7 @@ export function IdeaCard({ idea, onSelect }: IdeaCardProps) {
   return (
     <Card
       className={cn(
-        "cursor-pointer transition-shadow hover:shadow-md",
+        "cursor-pointer border-2 border-foreground transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0_#FF2D6B]",
         isConverted && "opacity-60"
       )}
       onClick={() => onSelect(idea)}
@@ -29,11 +29,11 @@ export function IdeaCard({ idea, onSelect }: IdeaCardProps) {
         <img
           src={idea.images[0].url}
           alt={idea.title ?? "Idea image"}
-          className="h-40 w-full object-cover rounded-t-xl"
+          className="h-40 w-full object-cover"
         />
       )}
       <CardContent className="space-y-1.5">
-        <p className={cn("font-medium line-clamp-2", !idea.title && "text-muted-foreground italic")}>
+        <p className={cn("font-display font-bold text-lg line-clamp-2", !idea.title && "text-muted-foreground italic")}>
           {idea.title || "Untitled idea"}
         </p>
         {idea.content && (
@@ -44,13 +44,13 @@ export function IdeaCard({ idea, onSelect }: IdeaCardProps) {
           </p>
         )}
       </CardContent>
-      <CardFooter className="flex items-center gap-2 text-xs text-muted-foreground">
+      <CardFooter className="flex items-center gap-2 text-xs text-muted-foreground uppercase tracking-wide">
         <span>
           {formatDistanceToNow(idea.createdAt, { addSuffix: true })}
         </span>
         <span className="flex-1" />
         {idea.links.length > 0 && (
-          <Badge variant="secondary" className="gap-1">
+          <Badge variant="secondary" className="gap-1 border border-foreground">
             <LinkIcon className="size-3" />
             {idea.links.length} {idea.links.length === 1 ? "link" : "links"}
           </Badge>

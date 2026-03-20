@@ -97,17 +97,20 @@ export function PostsTable({
         placeholder="Search captions..."
         value={globalFilter}
         onChange={(e) => setGlobalFilter(e.target.value)}
-        className="max-w-sm"
+        className="max-w-sm border-2 border-foreground"
       />
-      <div className="rounded-md border overflow-x-auto">
+      <div className="border-2 border-foreground overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border-b-2 border-foreground">
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={cn(responsiveClasses[header.id])}
+                    className={cn(
+                      "uppercase tracking-widest text-xs font-bold",
+                      responsiveClasses[header.id]
+                    )}
                   >
                     {header.isPlaceholder
                       ? null
@@ -125,7 +128,7 @@ export function PostsTable({
               table.getRowModel().rows.map((row) => (
                 <Fragment key={row.id}>
                   <TableRow
-                    className="cursor-pointer"
+                    className="cursor-pointer border-b border-foreground/20 hover:bg-muted"
                     onClick={() => row.toggleExpanded()}
                     data-state={row.getIsExpanded() ? "expanded" : undefined}
                   >
@@ -157,7 +160,7 @@ export function PostsTable({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center uppercase tracking-wide text-xs"
                 >
                   No posts found.
                 </TableCell>
@@ -176,7 +179,7 @@ function ExpandedRowDetail({ post }: { post: Post }) {
   const socialLink = platformLinks[post.platform];
 
   return (
-    <div className="border-t bg-muted/50 p-6 space-y-3">
+    <div className="border-t-2 border-foreground bg-muted p-6 space-y-3">
       {post.caption ? (
         <p className="text-sm whitespace-pre-wrap">{post.caption}</p>
       ) : (
@@ -189,7 +192,7 @@ function ExpandedRowDetail({ post }: { post: Post }) {
         </p>
       )}
 
-      <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground uppercase tracking-wide">
         <span>Platform: {platformLabel}</span>
         <span>&middot;</span>
         <span>Type: {typeLabel}</span>

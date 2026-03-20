@@ -34,19 +34,19 @@ export function DayCell({
     <div
       ref={setNodeRef}
       className={cn(
-        "min-h-[60px] sm:min-h-[100px] border-b border-r p-0.5 sm:p-1",
+        "min-h-[60px] sm:min-h-[100px] border-b-2 border-r-2 border-foreground/20 p-0.5 sm:p-1",
         !isCurrentMonth && "bg-muted/30 text-muted-foreground",
         isToday && "bg-primary/5",
-        isOver && "bg-accent/50"
+        isOver && "bg-accent/20"
       )}
       onClick={() => onDayClick(day)}
     >
       <div className="mb-1 flex items-center justify-start">
         <span
           className={cn(
-            "flex size-6 items-center justify-center text-xs",
+            "flex size-6 items-center justify-center text-xs font-bold",
             isToday &&
-              "rounded-full bg-primary text-primary-foreground font-semibold"
+              "bg-primary text-primary-foreground font-black"
           )}
         >
           {day}

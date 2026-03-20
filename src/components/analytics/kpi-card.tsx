@@ -31,19 +31,19 @@ export function KpiCard({
   sparklineType = "line",
 }: KpiCardProps) {
   return (
-    <Card>
+    <Card className="border-2 border-foreground">
       <CardHeader>
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+        <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
           {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-bold">{value}</span>
+          <span className="text-3xl font-display font-black">{value}</span>
           {delta !== undefined && (
             <span
               className={cn(
-                "text-xs font-medium",
+                "text-xs font-bold uppercase tracking-wide",
                 delta >= 0 ? "text-green-600" : "text-red-600"
               )}
             >
@@ -60,8 +60,8 @@ export function KpiCard({
                   <Line
                     type="monotone"
                     dataKey="value"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={1.5}
+                    stroke="var(--primary)"
+                    strokeWidth={2}
                     dot={false}
                   />
                 </LineChart>
@@ -77,12 +77,12 @@ export function KpiCard({
                     >
                       <stop
                         offset="0%"
-                        stopColor="hsl(var(--primary))"
+                        stopColor="var(--primary)"
                         stopOpacity={0.3}
                       />
                       <stop
                         offset="100%"
-                        stopColor="hsl(var(--primary))"
+                        stopColor="var(--primary)"
                         stopOpacity={0}
                       />
                     </linearGradient>
@@ -90,8 +90,8 @@ export function KpiCard({
                   <Area
                     type="monotone"
                     dataKey="value"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={1.5}
+                    stroke="var(--primary)"
+                    strokeWidth={2}
                     fill="url(#sparklineGradient)"
                   />
                 </AreaChart>
