@@ -135,6 +135,7 @@ export function createColumns(
       cell: ({ row }) => {
         const post = row.original;
         return (
+          <div onClick={(e) => e.stopPropagation()}>
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
@@ -181,6 +182,7 @@ export function createColumns(
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         );
       },
     },

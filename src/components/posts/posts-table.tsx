@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   getFilteredRowModel,
+  getExpandedRowModel,
   flexRender,
   type SortingState,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { ExternalLink } from "lucide-react";
 
 import type { Post, PostStatus } from "@/lib/data/types";
 import { createColumns } from "./columns";
 import { Input } from "@/components/ui/input";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -21,6 +25,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+const platformLabels: Record<string, string> = {
+  instagram: "Instagram",
+  tiktok: "TikTok",
+};
+
+const postTypeLabels: Record<string, string> = {
+  reel: "Reel",
+  carousel: "Carousel",
+  story: "Story",
+  single_image: "Single Image",
+  video: "Video",
+  photo: "Photo",
+};
+
+const platformLinks: Record<string, string> = {
+  instagram: "https://instagram.com/ourbitemarks",
+  tiktok: "https://tiktok.com/@ourbitemarks",
+};
 
 interface PostsTableProps {
   posts: Post[];
@@ -51,6 +74,7 @@ export function PostsTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: "includesString",
@@ -89,16 +113,32 @@ export function PostsTable({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <Fragment key={row.id}>
+                  <TableRow
+                    className="cursor-pointer"
+                    onClick={() => row.toggleExpanded()}
+                    data-state={row.getIsExpanded() ? "expanded" : undefined}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {row.getIsExpanded() && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="p-0"
+                      >
+                        <ExpandedRowDetail post={row.original} />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </Fragment>
               ))
             ) : (
               <TableRow>
@@ -113,6 +153,51 @@ export function PostsTable({
           </TableBody>
         </Table>
       </div>
+    </div>
+  );
+}
+
+function ExpandedRowDetail({ post }: { post: Post }) {
+  const platformLabel = platformLabels[post.platform] ?? post.platform;
+  const typeLabel = postTypeLabels[post.postType] ?? post.postType;
+  const socialLink = platformLinks[post.platform];
+
+  return (
+    <div className="border-t bg-muted/50 p-6 space-y-3">
+      {post.caption ? (
+        <p className="text-sm whitespace-pre-wrap">{post.caption}</p>
+      ) : (
+        <p className="text-sm text-muted-foreground">No caption</p>
+      )}
+
+      {post.notes && (
+        <p className="text-sm text-muted-foreground italic">
+          Notes: {post.notes}
+        </p>
+      )}
+
+      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <span>Platform: {platformLabel}</span>
+        <span>&middot;</span>
+        <span>Type: {typeLabel}</span>
+        <span>&middot;</span>
+        <span>Created: {format(post.createdAt, "MMM d, yyyy")}</span>
+      </div>
+
+      {post.status === "published" && socialLink && (
+        <div className="pt-1">
+          <a
+            href={socialLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            View on {platformLabel}
+            <ExternalLink className="ml-1.5 h-3 w-3" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }
