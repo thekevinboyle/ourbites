@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import type { Idea, CreatePostInput, UpdatePostInput } from "@/lib/data/types";
 import { useIdeas, useCreateIdea, useConvertIdea } from "@/hooks/use-ideas";
 import { useCreatePost } from "@/hooks/use-posts";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { IdeaCard } from "./idea-card";
 import { IdeaDetailSheet } from "./idea-detail-sheet";
 import { PostFormSheet } from "@/components/posts/post-form-sheet";
 
 export function IdeasBoard() {
-  const [quickAddValue, setQuickAddValue] = useState("");
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [detailSheetOpen, setDetailSheetOpen] = useState(false);
   const [postSheetOpen, setPostSheetOpen] = useState(false);
@@ -23,20 +23,16 @@ export function IdeasBoard() {
   const createPost = useCreatePost();
   const convertIdea = useConvertIdea();
 
-  // Pre-filled values for PostFormSheet when converting
   const [convertCaption, setConvertCaption] = useState("");
   const [convertNotes, setConvertNotes] = useState("");
 
-  const handleQuickAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
-    const value = quickAddValue.trim();
-    if (!value) return;
-
+  const handleNewIdea = () => {
     createIdea.mutate(
-      { title: value },
+      { title: "" },
       {
-        onSuccess: () => {
-          setQuickAddValue("");
+        onSuccess: (newIdea) => {
+          setSelectedIdea(newIdea);
+          setDetailSheetOpen(true);
         },
         onError: () => {
           toast.error("Failed to create idea.");
@@ -112,35 +108,50 @@ export function IdeasBoard() {
 
   return (
     <div className="space-y-6">
-      {/* Quick-add bar */}
-      <Input
-        placeholder="Jot down an idea..."
-        value={quickAddValue}
-        onChange={(e) => setQuickAddValue(e.target.value)}
-        onKeyDown={handleQuickAdd}
-        disabled={createIdea.isPending}
-      />
-
       {/* Ideas grid */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="h-48 animate-pulse rounded-xl bg-muted"
+              className="h-48 animate-pulse bg-muted"
             />
           ))}
         </div>
       ) : ideas.length === 0 ? (
-        <p className="text-center text-muted-foreground py-12">
-          No ideas yet. Start typing above!
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {ideas.map((idea) => (
-            <IdeaCard key={idea.id} idea={idea} onSelect={handleSelectIdea} />
-          ))}
+        <div className="flex flex-col items-center justify-center py-24 space-y-6">
+          <p className="text-muted-foreground uppercase tracking-widest text-sm">
+            No ideas yet
+          </p>
+          <Button
+            size="lg"
+            onClick={handleNewIdea}
+            disabled={createIdea.isPending}
+            className="h-16 w-16 text-2xl"
+          >
+            <Plus className="h-8 w-8" />
+          </Button>
+          <p className="text-muted-foreground text-sm">
+            Tap to start capturing ideas
+          </p>
         </div>
+      ) : (
+        <>
+          <div className="flex justify-end">
+            <Button
+              onClick={handleNewIdea}
+              disabled={createIdea.isPending}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              NEW IDEA
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {ideas.map((idea) => (
+              <IdeaCard key={idea.id} idea={idea} onSelect={handleSelectIdea} />
+            ))}
+          </div>
+        </>
       )}
 
       {/* Detail sheet */}
