@@ -7,6 +7,7 @@ import { SyncButton } from "./sync-button";
 
 export const navItems = [
   { href: "/", label: "Overview", icon: "📊" },
+  { href: "/ideas", label: "Ideas", icon: "💡" },
   { href: "/instagram", label: "Instagram", icon: "📸" },
   { href: "/tiktok", label: "TikTok", icon: "🎵" },
   { href: "/analytics", label: "Analytics", icon: "📈" },

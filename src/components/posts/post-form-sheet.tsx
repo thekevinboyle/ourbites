@@ -48,12 +48,19 @@ const captionLimits: Record<Platform, number> = {
   tiktok: 4000,
 };
 
+interface PostFormInitialValues {
+  caption?: string;
+  status?: PostStatus;
+  notes?: string;
+}
+
 interface PostFormSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   defaultPlatform: Platform;
   editingPost: Post | null;
   onSubmit: (data: CreatePostInput | (UpdatePostInput & { id: string })) => void;
+  initialValues?: PostFormInitialValues;
 }
 
 export function PostFormSheet({
@@ -62,6 +69,7 @@ export function PostFormSheet({
   defaultPlatform,
   editingPost,
   onSubmit,
+  initialValues,
 }: PostFormSheetProps) {
   const [platform, setPlatform] = useState<Platform>(defaultPlatform);
   const [caption, setCaption] = useState("");
@@ -86,13 +94,13 @@ export function PostFormSheet({
       setNotes(editingPost.notes ?? "");
     } else {
       setPlatform(defaultPlatform);
-      setCaption("");
+      setCaption(initialValues?.caption ?? "");
       setPostType(platformPostTypes[defaultPlatform][0].value);
-      setStatus("idea");
+      setStatus(initialValues?.status ?? "idea");
       setScheduledAt("");
-      setNotes("");
+      setNotes(initialValues?.notes ?? "");
     }
-  }, [editingPost, open, defaultPlatform]);
+  }, [editingPost, open, defaultPlatform, initialValues]);
 
   function formatDateTimeLocal(date: Date): string {
     const year = date.getFullYear();
