@@ -1,4 +1,4 @@
-# OurBites - Content Management Dashboard
+# OurBiteMarks - Content Management Dashboard
 
 ## Project Overview
 

@@ -18,7 +18,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "OurBites - Content Dashboard",
+  title: "OurBiteMarks - Content Dashboard",
   description: "Content management dashboard for Instagram and TikTok",
 };
 

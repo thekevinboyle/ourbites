@@ -32,7 +32,7 @@ export function MobileNav() {
           <Menu className="h-5 w-5" />
         </Button>
         <h1 className="ml-3 text-xl font-display font-black uppercase tracking-tight text-sidebar-foreground">
-          OurBites
+          OurBiteMarks
         </h1>
       </div>
 
@@ -40,7 +40,7 @@ export function MobileNav() {
         <SheetContent side="left" className="w-64 p-0 bg-sidebar text-sidebar-foreground border-r-4 border-primary">
           <SheetHeader className="border-b border-sidebar-border px-6">
             <SheetTitle className="text-2xl font-display font-black uppercase tracking-tight text-sidebar-foreground">
-              OurBites
+              OurBiteMarks
             </SheetTitle>
           </SheetHeader>
           <nav className="flex-1 space-y-0.5 p-4">

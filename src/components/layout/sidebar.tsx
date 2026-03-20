@@ -21,7 +21,7 @@ export function Sidebar() {
     <aside className="flex h-screen w-64 flex-col border-r-4 border-primary bg-sidebar text-sidebar-foreground">
       <div className="flex h-16 items-center border-b border-sidebar-border px-6">
         <h1 className="text-2xl font-display font-black uppercase tracking-tight">
-          OurBites
+          OurBiteMarks
         </h1>
       </div>
       <nav className="flex-1 space-y-0.5 p-4">
