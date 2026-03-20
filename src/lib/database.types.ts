@@ -105,6 +105,74 @@ export interface Database {
         };
         Relationships: [];
       };
+      ideas: {
+        Row: {
+          id: string;
+          title: string | null;
+          content: string | null;
+          links: string[];
+          created_at: string;
+          updated_at: string;
+          converted_to: string | null;
+        };
+        Insert: {
+          id?: string;
+          title?: string | null;
+          content?: string | null;
+          links?: string[];
+          created_at?: string;
+          updated_at?: string;
+          converted_to?: string | null;
+        };
+        Update: {
+          id?: string;
+          title?: string | null;
+          content?: string | null;
+          links?: string[];
+          updated_at?: string;
+          converted_to?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ideas_converted_to_fkey";
+            columns: ["converted_to"];
+            isOneToOne: false;
+            referencedRelation: "posts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      idea_images: {
+        Row: {
+          id: string;
+          idea_id: string;
+          storage_path: string;
+          file_name: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          idea_id: string;
+          storage_path: string;
+          file_name: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          idea_id?: string;
+          storage_path?: string;
+          file_name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "idea_images_idea_id_fkey";
+            columns: ["idea_id"];
+            isOneToOne: false;
+            referencedRelation: "ideas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       post_analytics: {
         Row: {
           id: string;

@@ -105,6 +105,36 @@ export interface CalendarPost {
   date: Date;
 }
 
+export interface Idea {
+  id: string;
+  title: string | null;
+  content: string | null;
+  links: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  convertedTo: string | null;
+  images: IdeaImage[];
+}
+
+export interface IdeaImage {
+  id: string;
+  storagePath: string;
+  fileName: string;
+  url: string;
+}
+
+export interface CreateIdeaInput {
+  title?: string;
+  content?: string;
+  links?: string[];
+}
+
+export interface UpdateIdeaInput {
+  title?: string;
+  content?: string;
+  links?: string[];
+}
+
 export interface DataProvider {
   getPosts(filters: PostFilters): Promise<Post[]>;
   createPost(post: CreatePostInput): Promise<Post>;
